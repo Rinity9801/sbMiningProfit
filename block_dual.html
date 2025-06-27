@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mithril + Titanium Calculator</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="fade-in page-fade-in">
+  <button id="modeToggle">Toggle Mode</button>
+  <a href="index.html" class="glow-button small-button">⬅ Back to Main Menu</a>
+
+  <h1>Mithril + Titanium Tracker</h1>
+
+  <div id="prices">Fetching prices...</div>
+  <button id="refreshButton" class="refresh-button">Refresh Prices</button>
+
+  <br>
+
+  <label for="blocksInput">Blocks per minute (combined):</label>
+  <input type="number" id="blocksInput" min="0" value="0">
+  <button onclick="calculateCombinedEarnings()">Calculate Combined Coins/hour</button>
+
+  <div id="earnings"></div>
+
+  <br>
+  <a href="https://bazaar.coflnet.com/product/ENCHANTED_MITHRIL" target="_blank" class="glow-button small-button">📈 Mithril on Coflnet</a>
+  <a href="https://bazaar.coflnet.com/product/ENCHANTED_TITANIUM" target="_blank" class="glow-button small-button">📈 Titanium on Coflnet</a>
+  <a href="https://skyblock.bz/product/ENCHANTED_MITHRIL" target="_blank" class="glow-button small-button">📊 Mithril on Skyblock.bz</a>
+  <a href="https://skyblock.bz/product/ENCHANTED_TITANIUM" target="_blank" class="glow-button small-button">📊 Titanium on Skyblock.bz</a>
+
+  <script src="script.js"></script>
+  <script>
+    let mithrilPrice = 0;
+    let titaniumPrice = 0;
+
+    async function fetchDualPrices() {
+      document.getElementById("prices").innerText = "Loading prices...";
+      try {
+        const res = await fetch("https://api.hypixel.net/skyblock/bazaar");
+        const data = await res.json();
+
+        mithrilPrice = data.products["ENCHANTED_MITHRIL"].buy_summary[0]?.pricePerUnit || 0;
+        titaniumPrice = data.products["ENCHANTED_TITANIUM"].buy_summary[0]?.pricePerUnit || 0;
+
+        document.getElementById("prices").innerText =
+          `Mithril Buy: ${mithrilPrice.toFixed(2)} coins | Titanium Buy: ${titaniumPrice.toFixed(2)} coins`;
+      } catch (e) {
+        console.error(e);
+        document.getElementById("prices").innerText = "Failed to load prices.";
+      }
+    }
+
+    function calculateCombinedEarnings() {
+      const blocksPerMinute = parseFloat(document.getElementById("blocksInput").value);
+      if (isNaN(blocksPerMinute) || mithrilPrice === 0 || titaniumPrice === 0) {
+        document.getElementById("earnings").innerText = "Invalid input or missing prices.";
+        return;
+      }
+
+      const totalPerHour = blocksPerMinute * 60 * (mithrilPrice + titaniumPrice);
+      document.getElementById("earnings").innerText =
+        `Estimated total earnings/hour: ${Math.round(totalPerHour).toLocaleString()} coins (combined)`;
+    }
+
+    document.getElementById("refreshButton").onclick = fetchDualPrices;
+
+    fetchDualPrices();
+  </script>
+</body>
+</html>

@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Loading...</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="fade-in page-fade-in">
+  <button id="modeToggle">Toggle Mode</button>
+  <a href="index.html" class="glow-button small-button">⬅ Back to Main Menu</a>
+
+  <h1 id="blockTitle">Loading...</h1>
+  <div id="price">Fetching price...</div>
+  <button id="priceButton" class="refresh-button">Refresh Price</button>
+
+  <br>
+
+  <label for="blocksInput">Blocks per minute:</label>
+  <input type="number" id="blocksInput" min="0" value="0">
+  <button onclick="calculateEarnings()">Calculate Coins/hour</button>
+
+  <div id="earnings"></div>
+
+  <br>
+  <div id="externalLinks"></div>
+
+  <script src="script.js"></script>
+  <script>
+    const urlParams = new URLSearchParams(window.location.search);
+    const itemID = urlParams.get('itemID');
+    const blockName = urlParams.get('name');
+    const imageName = urlParams.get('image');
+
+    document.title = `${blockName} Calculator`;
+    document.getElementById("blockTitle").innerText = `${blockName} Tracker`;
+
+    document.getElementById("priceButton").onclick = () => handleRefresh(itemID, 'price');
+
+    fetchPrice(itemID, 'price');
+
+    // Generate external price history buttons
+    const linksDiv = document.getElementById("externalLinks");
+    linksDiv.innerHTML = `
+      <a href="https://bazaar.coflnet.com/product/${itemID}" target="_blank" class="glow-button small-button">📈 Price History on Coflnet</a>
+      <a href="https://skyblock.bz/product/${itemID}" target="_blank" class="glow-button small-button">📊 Price History on Skyblock.bz</a>
+    `;
+  </script>
+</body>
+</html>

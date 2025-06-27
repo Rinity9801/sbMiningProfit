@@ -1,0 +1,207 @@
+body {
+  margin: 0;
+  padding: 0;
+  background-color: #121212;
+  font-family: Arial, sans-serif;
+  color: white;
+  text-align: center;
+  padding-top: 50px;
+  font-size: 1.4em;
+}
+
+.fade-in {
+  animation: fadeIn 0.6s ease-in;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.page-fade-in {
+  animation: fadeInPage 0.6s ease-in;
+}
+
+@keyframes fadeInPage {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+h1 {
+  margin-bottom: 40px;
+  font-size: 2.5em;
+}
+
+h2 {
+  margin-top: 40px;
+}
+
+.button-container {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  flex-wrap: wrap;
+}
+
+.glow-button {
+  display: flex;
+  align-items: center;
+  padding: 20px 30px;
+  border: 3px solid #00b894;
+  border-radius: 14px;
+  text-decoration: none;
+  color: white;
+  font-size: 1.4em;
+  background-color: #1e1e1e;
+  box-shadow: 0 0 14px #00b89466;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.glow-button:hover {
+  box-shadow: 0 0 24px #00b894aa;
+  transform: scale(1.07);
+}
+
+.glow-button.clicked::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 0;
+  height: 0;
+  border-radius: 50%;
+  background: rgba(0, 255, 200, 0.3);
+  animation: pulse 0.4s ease-out;
+  pointer-events: none;
+  z-index: 1;
+}
+
+@keyframes pulse {
+  to {
+    width: 250px;
+    height: 250px;
+    opacity: 0;
+  }
+}
+
+.icon {
+  width: 50px;
+  height: 50px;
+  margin-right: 20px;
+  background-color: #00b89433;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon img {
+  max-width: 70%;
+  max-height: 70%;
+}
+
+input, button, select {
+  padding: 14px;
+  font-size: 1.2em;
+  margin: 12px;
+  border-radius: 10px;
+  border: none;
+}
+
+button {
+  cursor: pointer;
+  background-color: #00b894;
+  color: white;
+}
+
+input {
+  width: 120px;
+  text-align: center;
+}
+
+#price, #earnings, .earnings {
+  font-size: 1.5em;
+  margin: 24px 0;
+}
+
+#modeToggle {
+  position: absolute;
+  top: 20px;
+  right: 20px;
+  padding: 12px 18px;
+  border-radius: 10px;
+  border: none;
+  background-color: #00b894;
+  color: white;
+  cursor: pointer;
+}
+
+body.light {
+  background-color: #f0f0f0;
+  color: #111;
+}
+
+body.light .glow-button {
+  background-color: #fff;
+  color: #111;
+  border-color: #555;
+  box-shadow: 0 0 12px #aaa;
+}
+
+body.light .icon {
+  background-color: #ddd;
+}
+
+body.light button {
+  background-color: #007BFF;
+}
+
+.refresh-button.clicked {
+  animation: pulseButton 0.4s ease-out;
+}
+
+@keyframes pulseButton {
+  0% {
+    box-shadow: 0 0 0px #00b894;
+    transform: scale(1);
+  }
+  50% {
+    box-shadow: 0 0 20px #00b894;
+    transform: scale(1.1);
+  }
+  100% {
+    box-shadow: 0 0 0px #00b894;
+    transform: scale(1);
+  }
+}
+
+.calculator-section {
+  margin: 30px 0;
+  border-top: 2px solid #00b894;
+  padding-top: 20px;
+}
+
+.chart-container {
+  margin-top: 40px;
+}
+.chart-container canvas {
+  max-width: 500px;
+  max-height: 250px;
+  margin: auto;
+}
+/* Compact small buttons for back and graph links */
+.small-button {
+  padding: 8px 14px;
+  font-size: 0.9em;
+  border-width: 2px;
+  margin: 6px auto;
+  display: inline-block;
+}
+
+.small-button:hover {
+  transform: scale(1.03);
+  box-shadow: 0 0 8px #00b89477;
+}
