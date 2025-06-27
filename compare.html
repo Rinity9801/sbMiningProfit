@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mining Profit Comparison</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="fade-in page-fade-in">
+  <button id="modeToggle">Toggle Mode</button>
+  <a href="index.html" class="glow-button small-button">⬅ Back to Main Menu</a>
+
+  <h1>Mining Profit Comparison (per hour)</h1>
+
+  <label for="fortuneInput">Your Mining Fortune:</label>
+  <input type="number" id="fortuneInput" value="0" min="0">
+  <br><br>
+
+  <div id="inputs"></div>
+
+  <button onclick="calculateProfits()">Calculate Best Block</button>
+
+  <div id="results"></div>
+
+  <script src="script.js"></script>
+  <script>
+    const blocks = [
+      { id: "ENCHANTED_QUARTZ_BLOCK", name: "Quartz", dropsPerBlock: 4 },
+      { id: "ENCHANTED_DIAMOND_BLOCK", name: "Diamond", dropsPerBlock: 9 },
+      { id: "ENCHANTED_GOLD_BLOCK", name: "Gold", dropsPerBlock: 8 },
+      { id: "ENCHANTED_IRON_BLOCK", name: "Iron", dropsPerBlock: 8 },
+      { id: "ENCHANTED_REDSTONE_BLOCK", name: "Redstone", dropsPerBlock: 4 },
+      { id: "ENCHANTED_COAL_BLOCK", name: "Coal", dropsPerBlock: 9 },
+      { id: "ENCHANTED_EMERALD_BLOCK", name: "Emerald", dropsPerBlock: 3 },
+      { id: "ENCHANTED_OBSIDIAN", name: "Obsidian", dropsPerBlock: 10 },
+      { id: "ENCHANTED_MITHRIL", name: "Mithril", dropsPerBlock: 5 },
+      { id: "ENCHANTED_TITANIUM", name: "Titanium", dropsPerBlock: 5 }
+    ];
+
+    // Generate input fields for each block
+    const inputDiv = document.getElementById("inputs");
+    blocks.forEach(block => {
+      inputDiv.innerHTML += `
+        <label>${block.name} blocks broken per 5 min:</label>
+        <input type="number" id="${block.id}_input" value="0" min="0"><br><br>
+      `;
+    });
+
+    async function calculateProfits() {
+      document.getElementById("results").innerText = "Calculating...";
+      try {
+        const res = await fetch("https://api.hypixel.net/skyblock/bazaar");
+        const data = await res.json();
+        const fortune = parseFloat(document.getElementById("fortuneInput").value) || 0;
+
+        let results = [];
+        blocks.forEach(block => {
+          const blocksPer5Min = parseFloat(document.getElementById(`${block.id}_input`).value) || 0;
+          const blocksPerHour = blocksPer5Min * 12;
+          const dropMultiplier = 1 + (fortune / 100);
+          const dropsPerHour = block.dropsPerBlock * dropMultiplier * blocksPerHour;
+
+          const price = data.products[block.id]?.buy_summary[0]?.pricePerUnit || 0;
+          const totalCoins = dropsPerHour * price;
+
+          results.push({
+            name: block.name,
+            coins: totalCoins
+          });
+        });
+
+        // Find most profitable
+        results.sort((a, b) => b.coins - a.coins);
+
+        let resultHTML = `<h2>Best: ${results[0].name} (${Math.round(results[0].coins).toLocaleString()} coins/hour)</h2><br><br>`;
+
+        results.forEach(r => {
+          resultHTML += `${r.name}: ${Math.round(r.coins).toLocaleString()} coins/hour<br>`;
+        });
+
+        document.getElementById("results").innerHTML = resultHTML;
+
+      } catch (e) {
+        console.error(e);
+        document.getElementById("results").innerText = "Failed to fetch prices.";
+      }
+    }
+  </script>
+</body>
+</html>
